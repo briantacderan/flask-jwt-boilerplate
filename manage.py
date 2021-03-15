@@ -43,5 +43,5 @@ if __name__ == '__main__':
     
 # Each time the database model changes, repeat the migrate and upgrade commands
 #
-# 1. py manage.py db migrate --message 'initial database migration'
+# 1. py manage.py db migrate
 # 2. py manage.py db upgrade
