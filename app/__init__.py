@@ -4,8 +4,9 @@ from flask_restplus import Api
 from flask import Blueprint
 
 from .main.controller.user_controller import api as user_ns
+from .main.controller.auth_controller import api as auth_ns
 
-# In line 10, we create a blueprint instance by passing name and import_name. API is the main entry point for the application resources and hence needs to be initialized with the blueprint in line 12
+# In line 11, we create a blueprint instance by passing name and import_name. API is the main entry point for the application resources and hence needs to be initialized with the blueprint in line 13
 
 blueprint = Blueprint('api', __name__)
 
@@ -16,8 +17,9 @@ api = Api(blueprint,
           )
 
 api.add_namespace(user_ns, path='/user')
+api.add_namespace(auth_ns)
 
-# In line 18 , we add the user namespace user_ns to the list of namespaces in the API instance
+# In line 19 , we add the user namespace user_ns to the list of namespaces in the API instance
 # 
 # We have now defined our blueprint. It’s time to register it on our Flask app
 # Update manage.py by importing blueprint and registering it with the Flask application instance.

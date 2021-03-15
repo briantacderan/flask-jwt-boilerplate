@@ -6,7 +6,7 @@ from flask_script import Manager
 
 from app import blueprint
 from app.main import create_app, db
-from app.main.model import user
+from app.main.model import user, blacklist
 
 # line 13 calls the create_app function we created initially to create the application instance with the required parameter from the environment variable which can be either of the following - dev, prod, test. If none is set in the environment variable, the default dev is used
 
