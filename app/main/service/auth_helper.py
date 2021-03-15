@@ -1,5 +1,7 @@
+import jwt
 from app.main.model.user import User
 from ..service.blacklist_service import save_token
+from ..config import key
 
 
 class Auth:
@@ -35,17 +37,14 @@ class Auth:
 
     @staticmethod
     def logout_user(data):
-        if data:
-            auth_token = data.split(" ")[1].encode()
+        if User.is_valid_token_format(data):
+            auth_token = data.split(' ')[1]
         else:
             auth_token = ''
         if auth_token:
-            resp = User.decode_auth_token(auth_token)
-            is_token = len(resp.split(' ')) == 1
-            #if not isinstance(resp, str):
-            if is_token:
-                # mark the token as blacklisted
-                return save_token(token=resp)
+            resp = jwt.decode(auth_token, key, algorithms=['HS256'])
+            if not isinstance(resp, str):
+                return save_token(token=auth_token)
             else:
                 response_object = {
                     'status': 'fail',
@@ -58,3 +57,33 @@ class Auth:
                 'message': 'Provide a valid auth token.'
             }
             return response_object, 403
+
+    @staticmethod
+    def get_logged_in_user(new_request):
+        # get the auth token
+        auth_token = new_request.headers.get('Authorization')
+        if auth_token:
+            resp = User.decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                user = User.query.filter_by(id=resp).first()
+                response_object = {
+                    'status': 'success',
+                    'data': {
+                        'user_id': user.id,
+                        'email': user.email,
+                        'admin': user.admin,
+                        'registered_on': str(user.registered_on)
+                    }
+                }
+                return response_object, 200
+            response_object = {
+                'status': 'fail',
+                'message': resp
+            }
+            return response_object, 401
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return response_object, 401

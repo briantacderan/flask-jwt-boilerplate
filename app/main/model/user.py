@@ -1,5 +1,6 @@
 import jwt
 import datetime as dt
+import json
 from dateutil.relativedelta import relativedelta
 from app.main.model.blacklist import BlacklistToken
 from ..config import key
@@ -44,12 +45,11 @@ class User(db.Model):
                 'sub': user_id
             }
             precode = jwt.encode(
-                {'some': payload['sub']},
+                payload,
                 key,
                 algorithm='HS256'
-            )
-            return precode.encode('utf-8')
-
+            ).encode()
+            return precode
         except Exception as e:
             return e
 
@@ -61,13 +61,27 @@ class User(db.Model):
         :return: integer|string
         """
         try:
-            auth_token = auth_token.decode()
+            payload = jwt.decode(
+                auth_token, 
+                key, 
+                algorithms=['HS256']
+            )
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted_token:
                 return 'Token blacklisted. Please log in again.'
             else:
-                return auth_token
+                return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+    @staticmethod
+    def is_valid_token_format(auth_header):
+        if not auth_header:
+            return False
+        parts = auth_header.split(' ')
+        if len(parts) != 2:
+            return False
+        auth_scheme = parts[0]
+        return auth_scheme == 'Bearer'
