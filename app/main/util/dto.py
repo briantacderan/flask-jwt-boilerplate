@@ -1,5 +1,4 @@
 from flask_restplus import Namespace, fields
-from .decorator import token_required
 
 authorizations = {
     'Bearer Auth': {
@@ -25,8 +24,7 @@ class UserDto:
 class AuthDto:
     api = Namespace(
         'auth', 
-        description='Authentication related operations', 
-        security='Bearer Auth',
+        description='Authentication related operations',
         authorizations=authorizations
     )
     user_auth = api.model('auth_details', {

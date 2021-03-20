@@ -10,14 +10,11 @@ import requests
 api = AuthDto.api
 user_auth = AuthDto.user_auth
 
-parser = api.parser()
-
 
 @api.route('/login')
 class UserLogin(Resource):
     @api.doc('user login')
-    @api.expect(user_auth, validate=True) 
-    @api.header('Authorization', 'Bearer Auth', required=True)
+    @api.expect(user_auth, validate=True)
     def post(self):
         """ User login resource """
         post_data = request.json
@@ -27,8 +24,8 @@ class UserLogin(Resource):
 
 
 @api.route('/logout')
-class LogoutAPI(UserLogin):
-    @api.doc('logout a user', security='Bearer Auth') 
+class LogoutAPI(Resource):
+    @api.doc('logout a user', security='Bearer auth')
     @token_required
     def post(self):
         """ User logout resource """
