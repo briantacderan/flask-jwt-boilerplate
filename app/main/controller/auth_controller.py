@@ -15,11 +15,11 @@ parser = api.parser()
 
 @api.route('/login')
 class UserLogin(Resource):
-    """ User Login Resource """
     @api.doc('user login')
     @api.expect(user_auth, validate=True) 
     @api.header('Authorization', 'Bearer Auth', required=True)
     def post(self):
+        """ User login resource """
         post_data = request.json
         resp = Auth.login_user(data=post_data)
         api.header = {'Authorization': f'Bearer {resp[0]["Authorization"]}'}
@@ -28,10 +28,10 @@ class UserLogin(Resource):
 
 @api.route('/logout')
 class LogoutAPI(UserLogin):
-    """ Logout Resource """
     @api.doc('logout a user', security='Bearer Auth') 
     @token_required
     def post(self):
+        """ User logout resource """
         if not api.header:
             api.header = {'Authorization': f'Bearer {Auth.imp_code}'}
         return Auth.logout_user(data=api.header)

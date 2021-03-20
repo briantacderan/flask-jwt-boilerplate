@@ -3,8 +3,8 @@ from .decorator import token_required
 
 authorizations = {
     'Bearer Auth': {
-        'type': 'str',
-        'in': 'api.header',
+        'type': 'apiKey',
+        'in': 'header',
         'name': 'Authorization'
     }
 }
