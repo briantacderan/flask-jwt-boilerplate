@@ -5,14 +5,15 @@ from ..config import key
 
 
 class Auth:
+    imp_code = 'fresh'
 
     @staticmethod
     def login_user(data):
         try:
-            # fetch the user data
             user = User.query.filter_by(email=data.get('email')).first()
             if user and user.check_password(data.get('password')):
                 auth_token = user.encode_auth_token(user.id)
+                Auth.imp_code = auth_token.decode()
                 if auth_token:
                     response_object = {
                         'status': 'success',
@@ -36,33 +37,16 @@ class Auth:
             return response_object, 500
 
     @staticmethod
-    def logout_user(data):
-        if User.is_valid_token_format(data):
-            auth_token = data.split(' ')[1]
-        else:
-            auth_token = ''
-        if auth_token:
-            resp = jwt.decode(auth_token, key, algorithms=['HS256'])
-            if not isinstance(resp, str):
-                return save_token(token=auth_token)
-            else:
-                response_object = {
-                    'status': 'fail',
-                    'message': resp
-                }
-                return response_object, 401
-        else:
-            response_object = {
-                'status': 'fail',
-                'message': 'Provide a valid auth token.'
-            }
-            return response_object, 403
-
-    @staticmethod
     def get_logged_in_user(new_request):
         # get the auth token
-        auth_token = new_request.headers.get('Authorization')
+        try:
+            auth_token = new_request.headers.get('Authorization')
+        except:
+            auth_token = new_request['Authorization']
+        else: 
+            auth_token = f'Bearer {Auth.imp_code}'
         if auth_token:
+            auth_token = auth_token.split(' ')[1]
             resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 user = User.query.filter_by(id=resp).first()
@@ -87,3 +71,27 @@ class Auth:
                 'message': 'Provide a valid auth token.'
             }
             return response_object, 401
+
+    @staticmethod
+    def logout_user(data):
+        if User.is_valid_token_format(data):
+            Auth.imp_code = 'fresh'
+            auth_token = data['Authorization'].split(' ')[1]
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = jwt.decode(auth_token, key, algorithms=['HS256'])
+            if not isinstance(resp, str):
+                return save_token(token=auth_token)
+            else:
+                response_object = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return response_object, 401
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return response_object, 403

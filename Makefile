@@ -13,9 +13,9 @@ python-packages:
 install: system-packages python-packages
 
 tests:
-   python manage.py test
+   py manage.py test
 
 run:
-   python manage.py run
+   py manage.py run
 
 all: clean install tests run

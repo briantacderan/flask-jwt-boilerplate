@@ -7,11 +7,6 @@ from ..service.user_service import save_new_user, get_all_users, get_a_user
 api = UserDto.api
 _user = UserDto.user
 
-# line 1 through 8 imports all the required resources for the user controller.
-#
-# These two classes extends the abstract flask-restplus resource: 
-#
-# Concrete resources should extend from this class and expose methods for each supported HTTP method. If a resource is invoked with an unsupported HTTP method, the API will return a response with status 405 Method Not Allowed. Otherwise the appropriate method is called and passed all arguments from the URL rule used when adding the resource to an API instance.
 
 @api.route('/')
 class UserList(Resource):
@@ -43,13 +38,3 @@ class User(Resource):
             api.abort(404)
         else:
             return user
-
-# The api namespace in line 7 above provides the controller with several decorators which includes but is not limited to the following:
-#
-# api.route: A decorator to route resources
-# api.marshal_with: A decorator specifying the fields to use for serialization (This is where we use the userDto we created earlier)
-# api.marshal_list_with: A shortcut decorator for marshal_with above withas_list = True
-# api.doc: A decorator to add some api documentation to the decorated object
-# api.response: A decorator to specify one of the expected responses
-# api.expect: A decorator to Specify the expected input model ( we still use the userDto for the expected input)
-# api.param: A decorator to specify one of the expected parameters

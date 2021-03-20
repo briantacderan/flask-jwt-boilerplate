@@ -80,7 +80,7 @@ class User(db.Model):
     def is_valid_token_format(auth_header):
         if not auth_header:
             return False
-        parts = auth_header.split(' ')
+        parts = auth_header['Authorization'].split(' ')
         if len(parts) != 2:
             return False
         auth_scheme = parts[0]

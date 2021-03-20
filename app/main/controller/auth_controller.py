@@ -1,29 +1,37 @@
 from flask import request
-from flask_restplus import Resource
+from flask_restplus import Resource, marshal, fields
 
 from app.main.service.auth_helper import Auth
 from ..util.dto import AuthDto
+from ..util.decorator import token_required
+
+import requests
 
 api = AuthDto.api
 user_auth = AuthDto.user_auth
+
+parser = api.parser()
 
 
 @api.route('/login')
 class UserLogin(Resource):
     """ User Login Resource """
     @api.doc('user login')
-    @api.expect(user_auth, validate=True)
+    @api.expect(user_auth, validate=True) 
+    @api.header('Authorization', 'Bearer Auth', required=True)
     def post(self):
-        # get the post data
         post_data = request.json
-        return Auth.login_user(data=post_data)
+        resp = Auth.login_user(data=post_data)
+        api.header = {'Authorization': f'Bearer {resp[0]["Authorization"]}'}
+        return resp
 
 
 @api.route('/logout')
-class LogoutAPI(Resource):
+class LogoutAPI(UserLogin):
     """ Logout Resource """
-    @api.doc('logout a user')
+    @api.doc('logout a user', security='Bearer Auth') 
+    @token_required
     def post(self):
-        # get auth token
-        auth_header = request.headers.get('Authorization')
-        return Auth.logout_user(data=auth_header)
+        if not api.header:
+            api.header = {'Authorization': f'Bearer {Auth.imp_code}'}
+        return Auth.logout_user(data=api.header)
