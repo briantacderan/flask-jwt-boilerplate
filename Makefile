@@ -1,21 +1,20 @@
-.PHONY: clean system-packages python-packages install tests run all
+.PHONY: env clean python-packages install tests run all
 
-clean:
-   find . -type f -name '*.pyc' -delete
-   find . -type f -name '*.log' -delete
+env: 
+    pipenv shell
 
-system-packages:
-   sudo apt install python-pip -y
+clean: 
+    pipenv clean
 
-python-packages:
-   pip install -r requirements.txt
+python-packages: 
+    pipenv install
 
-install: system-packages python-packages
+install: clean python-packages
 
-tests:
-   py manage.py test
+tests: 
+    py manage.py test
 
-run:
-   py manage.py run
+run: 
+    py manage.py run
 
 all: clean install tests run
