@@ -4,8 +4,15 @@ from flask_restplus import Resource
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user
 
+
+# The user controller class handles all the incoming HTTP requests relating to the user
+
+
 api = UserDto.api
 _user = UserDto.user
+
+
+# Import all the required resources for the user controller
 
 
 @api.route('/')
@@ -38,3 +45,8 @@ class User(Resource):
             api.abort(404)
         else:
             return user
+
+
+# We defined two concrete classes in our user controller which are userList and user. These two classes extends the abstract flask-restplus resource
+
+# Concrete resources should extend from this class and expose methods for each supported HTTP method. If a resource is invoked with an unsupported HTTP method, the API will return a response with status 405 Method Not Allowed. Otherwise the appropriate method is called and passed all arguments from the URL rule used when adding the resource to an API instance

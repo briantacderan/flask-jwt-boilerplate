@@ -26,7 +26,7 @@ class UserLogin(Resource):
 @api.route('/logout')
 class LogoutAPI(Resource):
     @api.doc('logout a user', security='Bearer auth')
-    @token_required
+    # @token_required
     def post(self):
         """ User logout resource """
         if not api.header:

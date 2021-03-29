@@ -8,7 +8,7 @@ from .. import db, flask_bcrypt
 
 class User(db.Model):
     """ User Model for storing user related details """
-    __tablename__ = "user"
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -40,7 +40,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': dt.datetime.now()+relativedelta(days=1),
+                'exp': dt.datetime.now()+relativedelta(days=1, seconds=3),
                 'iat': dt.datetime.now(),
                 'sub': user_id
             }
@@ -52,10 +52,15 @@ class User(db.Model):
             return precode
         except Exception as e:
             return e
+    
 
     @staticmethod
     def decode_auth_token(auth_token):
         """
+        Decoding: 
+        Blacklisted token, expired token and invalid token are taken into 
+        consideration while decoding the authentication token
+        
         Decodes the auth token
         :param auth_token:
         :return: integer|string

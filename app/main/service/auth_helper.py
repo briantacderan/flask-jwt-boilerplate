@@ -5,7 +5,7 @@ from ..config import key
 
 
 class Auth:
-    imp_code = 'fresh'
+    # imp_code = 'fresh'
 
     @staticmethod
     def login_user(data):
@@ -13,7 +13,7 @@ class Auth:
             user = User.query.filter_by(email=data.get('email')).first()
             if user and user.check_password(data.get('password')):
                 auth_token = user.encode_auth_token(user.id)
-                Auth.imp_code = auth_token.decode()
+                # Auth.imp_code = auth_token.decode()
                 if auth_token:
                     response_object = {
                         'status': 'success',
@@ -43,8 +43,8 @@ class Auth:
             auth_token = new_request.headers.get('Authorization')
         except:
             auth_token = new_request['Authorization']
-        else: 
-            auth_token = f'Bearer {Auth.imp_code}'
+        # else: 
+            # auth_token = f'Bearer {Auth.imp_code}'
         if auth_token:
             auth_token = auth_token.split(' ')[1]
             resp = User.decode_auth_token(auth_token)
