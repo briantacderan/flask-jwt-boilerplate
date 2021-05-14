@@ -2,6 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import UserDto
+from ..util.decorator import admin_token_required
 from ..service.user_service import save_new_user, get_all_users, get_a_user
 
 
@@ -17,8 +18,9 @@ _user = UserDto.user
 
 @api.route('/')
 class UserList(Resource):
-    @api.doc('list_of_registered_users')
+    @api.doc('list of registered users', security='Bearer Auth')
     @api.marshal_list_with(_user, envelope='data')
+    @admin_token_required
     def get(self):
         """ List all registered users """
         return get_all_users()

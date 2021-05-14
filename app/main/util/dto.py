@@ -18,7 +18,8 @@ authorizations = {
 class UserDto:
     api = Namespace(
         'user', 
-        description='User related operations'
+        description='User related operations',
+        authorizations=authorizations
     )
     
     # Create a new user dto through the model interface provided by the api namespace
