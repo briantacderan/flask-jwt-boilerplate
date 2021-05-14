@@ -12,7 +12,7 @@ class TestUserModel(BaseTestCase):
         user = User(
             email='test@test.com',
             password='test',
-            registered_on=dt.datetime.now()
+            registered_on=dt.datetime.utcnow()
         )
         db.session.add(user)
         db.session.commit()
@@ -23,7 +23,7 @@ class TestUserModel(BaseTestCase):
         user = User(
             email='test@test.com',
             password='test',
-            registered_on=dt.datetime.now()
+            registered_on=dt.datetime.utcnow()
         )
         db.session.add(user)
         db.session.commit()

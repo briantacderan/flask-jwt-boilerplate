@@ -40,7 +40,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': dt.datetime.now()+relativedelta(days=1, seconds=3),
+                'exp': dt.datetime.now() + relativedelta(days=1, seconds=3),
                 'iat': dt.datetime.now(),
                 'sub': user_id
             }
@@ -48,8 +48,8 @@ class User(db.Model):
                 payload,
                 key,
                 algorithm='HS256'
-            ).encode()
-            return precode
+            )
+            return precode.encode()
         except Exception as e:
             return e
     

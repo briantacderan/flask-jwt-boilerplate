@@ -7,7 +7,7 @@ from flask_restplus import Namespace, fields
 authorizations = {
     'Bearer Auth': {
         'type': 'apiKey',
-        'in': 'header',
+        'in': 'headers',
         'name': 'Authorization'
     }
 }
@@ -32,6 +32,7 @@ class UserDto:
 
 
 class AuthDto:
+    
     api = Namespace(
         'auth', 
         description='Authentication related operations',
@@ -39,6 +40,8 @@ class AuthDto:
     )
     
     user_auth = api.model('auth_details', {
-        'email': fields.String(required=True, description='Email address for login'),
-        'password': fields.String(required=True, description='User password for login')
+        'email': fields.String(required=True, 
+                               description='Email address for login'),
+        'password': fields.String(required=True, 
+                                  description='User password for login')
     })

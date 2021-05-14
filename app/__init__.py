@@ -16,8 +16,8 @@ api = Api(blueprint,
           doc='/documentation',
           title='FLASK RESTPLUS API BOILER-PLATE WITH JWT',
           version='1.0',
-          description='Boilerplate for Flask-RESTPlus web service'
-          )
+          description='Boilerplate for Flask-RESTPlus Web Service'
+         )
 
 
 # Add the user namespace user_ns to the list of namespaces in the API instance

@@ -21,7 +21,6 @@ def token_required(f):
 def admin_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-
         data, status = Auth.get_logged_in_user(request)
         token = data.get('data')
 
@@ -32,7 +31,7 @@ def admin_token_required(f):
         if not admin:
             response_object = {
                 'status': 'fail',
-                'message': 'admin token required'
+                'message': 'Admin token required.'
             }
             return response_object, 401
 
